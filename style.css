@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap');
 
-
 /* =========================================================
    RESET
    ========================================================= */
@@ -20,7 +19,6 @@ body {
     overflow-x: hidden;
 
     font-family: "DM Sans", sans-serif;
-
     color: #4f4045;
 
     background:
@@ -48,7 +46,7 @@ button {
 
 
 /* =========================================================
-   APP
+   MAIN APP
    ========================================================= */
 
 .birthday-app {
@@ -210,7 +208,7 @@ h2 {
 
 
 /* =========================================================
-   PERSONALIZATION SCREEN
+   PERSONALIZATION
    ========================================================= */
 
 #screen-personalize {
@@ -480,7 +478,7 @@ h2 {
 
 
 /* =========================================================
-   ROOM LIGHTS
+   LIGHTS
    ========================================================= */
 
 .room-lights {
@@ -514,7 +512,7 @@ h2 {
 
 
 /* =========================================================
-   BIRTHDAY DECORATIONS
+   DECORATIONS
    ========================================================= */
 
 .birthday-decorations {
@@ -600,7 +598,7 @@ h2 {
 
 
 /* =========================================================
-   BANNER
+   BIRTHDAY BANNER
    ========================================================= */
 
 .birthday-banner {
@@ -661,7 +659,7 @@ h2 {
 
 
 /* =========================================================
-   BETTER CAKE
+   CAKE
    ========================================================= */
 
 .better-cake {
@@ -1307,7 +1305,7 @@ h2 {
 
 
 /* =========================================================
-   MULTI-SELECTION CHIPS
+   MULTI SELECTION
    ========================================================= */
 
 .multi-selection-summary {
@@ -1572,23 +1570,23 @@ h2 {
 
 
 /* =========================================================
-   FINAL BOUQUET REVEAL
+   FINAL BOUQUET
    ========================================================= */
 
 .bouquet-reveal {
     position: relative;
 
-    min-height: 620px;
+    min-height: 680px;
 
-    padding: 30px 18px 35px;
+    padding: 30px 18px 40px;
 
     border-radius: 28px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(255,253,249,.98),
-            rgba(251,243,238,.96)
+            #fffdf9,
+            #fbf1eb
         );
 
     text-align: center;
@@ -1597,13 +1595,22 @@ h2 {
         revealBouquet .8s ease;
 }
 
+.bouquet-reveal h2 {
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   BOUQUET CANVAS
+   ========================================================= */
+
 .bouquet-visual {
     position: relative;
 
-    width: min(100%, 430px);
-    height: 420px;
+    width: min(100%, 470px);
+    height: 500px;
 
-    margin: 13px auto 23px;
+    margin: 20px auto 0;
 
     overflow: hidden;
 
@@ -1611,34 +1618,104 @@ h2 {
 
     background:
         radial-gradient(
-            circle at 50% 35%,
-            #fffaf7,
-            #f2e3dd
+            circle at 50% 32%,
+            #fffdfa 0%,
+            #f8ece7 68%,
+            #f1ded8 100%
         );
 
     box-shadow:
-        inset 0 0 40px rgba(133,92,87,.06),
-        0 16px 38px rgba(100,72,73,.1);
+        inset 0 0 45px rgba(126, 91, 88, .07),
+        0 18px 45px rgba(105, 76, 77, .12);
 }
 
-.real-bouquet {
+
+/* =========================================================
+   PAPER
+   ========================================================= */
+
+.bouquet-paper {
+    position: absolute;
+
+    left: 50%;
+    bottom: 20px;
+
+    z-index: 8;
+
+    width: 245px;
+    height: 285px;
+
+    transform:
+        translateX(-50%);
+
+    clip-path:
+        polygon(
+            7% 0%,
+            93% 0%,
+            100% 100%,
+            0% 100%
+        );
+
+    border-radius:
+        8px 8px 22px 22px;
+
+    background:
+        var(
+            --wrap-color,
+            #efb6a0
+        );
+
+    box-shadow:
+        0 13px 25px rgba(85,55,50,.15),
+        inset 0 0 25px rgba(255,255,255,.16);
+}
+
+.bouquet-paper::before {
+    content: "";
+
     position: absolute;
 
     inset: 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            rgba(255,255,255,.28),
+            transparent 28%,
+            rgba(255,255,255,.08) 53%,
+            transparent 72%
+        );
+
+    clip-path:
+        polygon(
+            0 0,
+            50% 20%,
+            100% 0,
+            100% 100%,
+            0 100%
+        );
 }
+
+
+/* =========================================================
+   STEMS
+   ========================================================= */
 
 .bouquet-stems {
     position: absolute;
 
     left: 50%;
-    bottom: 55px;
+    bottom: 92px;
 
-    z-index: 5;
+    z-index: 18;
 
-    width: 170px;
-    height: 230px;
+    width: 250px;
+    height: 290px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
+
+    pointer-events: none;
 }
 
 .bouquet-stem {
@@ -1647,118 +1724,100 @@ h2 {
     left: 50%;
     bottom: 0;
 
-    width: 5px;
+    width: 6px;
 
-    border-radius: 8px;
+    min-height: 205px;
 
-    transform-origin: bottom center;
+    border-radius: 20px;
+
+    transform-origin:
+        bottom center;
 
     background:
         linear-gradient(
             90deg,
-            #3f6b4a,
-            #769c67,
-            #456c4d
-        );
-}
-
-.bouquet-flower-head {
-    position: absolute;
-
-    z-index: 20;
-
-    font-size: 48px;
-
-    line-height: 1;
-
-    transform:
-        translate(-50%,-50%)
-        rotate(var(--rotation));
-
-    filter:
-        drop-shadow(
-            0 5px 5px rgba(70,45,45,.12)
+            #315d3b,
+            #5f8957 45%,
+            #315b39
         );
 
-    animation:
-        bouquetFlowerPop .55s ease backwards;
-}
+    box-shadow:
+        1px 0 rgba(255,255,255,.18);
 
-.bouquet-greenery-item {
-    position: absolute;
-
-    z-index: 12;
-
-    font-size: 48px;
-
-    line-height: 1;
-
-    transform:
-        translate(-50%,-50%)
-        rotate(var(--rotation));
-
-    filter:
-        drop-shadow(
-            0 4px 4px rgba(55,75,50,.1)
-        );
+    opacity: .98;
 }
 
 
 /* =========================================================
-   BOUQUET WRAPPING
+   FLOWERS
    ========================================================= */
 
-.bouquet-paper {
+.bouquet-flower-head {
     position: absolute;
 
-    left: 50%;
-    bottom: 15px;
+    z-index: 45;
 
-    z-index: 25;
+    display: block;
 
-    width: 190px;
-    height: 215px;
+    line-height: 1;
 
-    transform: translateX(-50%);
+    font-size: 54px;
 
-    clip-path:
-        polygon(
-            8% 0,
-            92% 0,
-            100% 100%,
-            0 100%
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--rotation, 0deg));
+
+    transform-origin: center;
+
+    filter:
+        drop-shadow(
+            0 5px 5px rgba(65,45,45,.13)
         );
 
-    border-radius:
-        8px 8px 18px 18px;
+    animation:
+        bouquetFlowerPop .55s ease backwards;
 
-    box-shadow:
-        inset 0 0 25px rgba(0,0,0,.07),
-        0 10px 20px rgba(70,50,45,.12);
+    pointer-events: none;
 }
 
-.bouquet-paper-fold {
+.bouquet-flower-head:nth-of-type(2n) {
+    font-size: 49px;
+}
+
+.bouquet-flower-head:nth-of-type(3n) {
+    font-size: 58px;
+}
+
+.bouquet-flower-head:nth-of-type(5n) {
+    font-size: 45px;
+}
+
+
+/* =========================================================
+   GREENERY
+   ========================================================= */
+
+.bouquet-greenery-item {
     position: absolute;
 
-    inset: 0;
+    z-index: 30;
 
-    background:
-        linear-gradient(
-            105deg,
-            rgba(255,255,255,.27),
-            transparent 30%,
-            rgba(255,255,255,.16) 60%,
-            transparent
+    display: block;
+
+    line-height: 1;
+
+    font-size: 48px;
+
+    transform:
+        translate(-50%, -50%)
+        rotate(var(--rotation, 0deg));
+
+    filter:
+        drop-shadow(
+            0 4px 4px rgba(45,70,45,.12)
         );
 
-    clip-path:
-        polygon(
-            0 0,
-            50% 18%,
-            100% 0,
-            100% 100%,
-            0 100%
-        );
+    pointer-events: none;
 }
 
 
@@ -1770,141 +1829,166 @@ h2 {
     position: absolute;
 
     left: 50%;
-    bottom: 70px;
+    bottom: 145px;
 
-    z-index: 40;
+    z-index: 60;
 
-    width: 88px;
-    height: 55px;
+    width: 125px;
+    height: 78px;
 
-    transform: translateX(-50%);
-}
+    transform:
+        translateX(-50%);
 
-.bow-left,
-.bow-right {
-    position: absolute;
-
-    top: 5px;
-
-    width: 46px;
-    height: 35px;
-
-    background: var(--bow-color);
-
-    box-shadow:
-        0 4px 8px rgba(60,40,40,.15);
+    pointer-events: none;
 }
 
 .bow-left {
-    left: 0;
+    position: absolute;
+
+    left: 2px;
+    top: 5px;
+
+    width: 63px;
+    height: 48px;
 
     border-radius:
-        50% 20% 50% 50%;
+        65% 25% 65% 50%;
 
-    transform: rotate(18deg);
+    background:
+        var(
+            --bow-color,
+            #9bcbe5
+        );
+
+    transform:
+        rotate(18deg);
+
+    box-shadow:
+        0 5px 9px rgba(65,55,55,.15);
 }
 
 .bow-right {
-    right: 0;
+    position: absolute;
+
+    right: 2px;
+    top: 5px;
+
+    width: 63px;
+    height: 48px;
 
     border-radius:
-        20% 50% 50% 50%;
+        25% 65% 50% 65%;
 
-    transform: rotate(-18deg);
+    background:
+        var(
+            --bow-color,
+            #9bcbe5
+        );
+
+    transform:
+        rotate(-18deg);
+
+    box-shadow:
+        0 5px 9px rgba(65,55,55,.15);
 }
 
 .bow-knot {
     position: absolute;
 
     left: 50%;
-    top: 12px;
+    top: 18px;
 
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     border-radius: 50%;
 
-    background: var(--bow-color);
+    background:
+        var(
+            --bow-color,
+            #9bcbe5
+        );
 
     box-shadow:
-        0 3px 6px rgba(60,40,40,.15);
+        0 4px 7px rgba(65,55,55,.17);
+
+    z-index: 5;
 }
 
-.bow-tail-left,
+.bow-tail-left {
+    position: absolute;
+
+    left: 32px;
+    top: 38px;
+
+    width: 28px;
+    height: 57px;
+
+    background:
+        var(
+            --bow-color,
+            #9bcbe5
+        );
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            82% 100%,
+            50% 78%,
+            20% 100%
+        );
+
+    transform:
+        rotate(7deg);
+}
+
 .bow-tail-right {
     position: absolute;
 
-    top: 28px;
+    right: 32px;
+    top: 38px;
 
-    width: 20px;
-    height: 45px;
+    width: 28px;
+    height: 57px;
 
-    background: var(--bow-color);
+    background:
+        var(
+            --bow-color,
+            #9bcbe5
+        );
 
     clip-path:
         polygon(
             0 0,
             100% 0,
             80% 100%,
-            50% 80%,
-            20% 100%
+            50% 78%,
+            18% 100%
         );
-}
 
-.bow-tail-left {
-    left: 27px;
-    transform: rotate(7deg);
-}
-
-.bow-tail-right {
-    right: 27px;
-    transform: rotate(-7deg);
+    transform:
+        rotate(-7deg);
 }
 
 
 /* =========================================================
-   BOUQUET DETAILS
+   REMOVE BOUQUET DETAILS
    ========================================================= */
 
 .bouquet-details {
-    max-width: 390px;
-
-    margin: 0 auto 21px;
-
-    padding: 18px;
-
-    border: 1px solid #eadbd7;
-    border-radius: 19px;
-
-    background: rgba(255,250,247,.9);
-
-    text-align: left;
+    display: none !important;
 }
 
-.bouquet-details h3 {
-    margin:
-        11px 0 4px;
+.bouquet-reveal > .primary-button {
+    position: relative;
 
-    font-family: "Playfair Display", serif;
+    z-index: 100;
 
-    font-size: 16px;
-    font-weight: 500;
-
-    color: #805e66;
-}
-
-.bouquet-details h3:first-child {
-    margin-top: 0;
-}
-
-.bouquet-details p {
-    padding: 2px 0;
-
-    font-size: 12px;
-
-    color: #756265;
+    margin-top: 20px;
 }
 
 
@@ -2073,7 +2157,6 @@ h2 {
     }
 }
 
-
 @keyframes gentleFloat {
 
     0%,
@@ -2090,7 +2173,6 @@ h2 {
     }
 }
 
-
 @keyframes glowPulse {
 
     0%,
@@ -2104,7 +2186,6 @@ h2 {
         transform: scale(1.05);
     }
 }
-
 
 @keyframes bulbGlow {
 
@@ -2124,7 +2205,6 @@ h2 {
     }
 }
 
-
 @keyframes balloonFloat {
 
     0%,
@@ -2140,7 +2220,6 @@ h2 {
             rotate(3deg);
     }
 }
-
 
 @keyframes sparkleFloat {
 
@@ -2160,27 +2239,6 @@ h2 {
     }
 }
 
-
-@keyframes bannerDrop {
-
-    from {
-        opacity: 0;
-
-        transform:
-            translate(-50%,-25px)
-            scale(.95);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            translate(-50%,0)
-            scale(1);
-    }
-}
-
-
 @keyframes numberFlame {
 
     from {
@@ -2198,7 +2256,6 @@ h2 {
     }
 }
 
-
 @keyframes numberFlameOut {
 
     to {
@@ -2210,7 +2267,6 @@ h2 {
             scale(.1);
     }
 }
-
 
 @keyframes candleSmoke {
 
@@ -2233,7 +2289,6 @@ h2 {
     }
 }
 
-
 @keyframes slideIn {
 
     from {
@@ -2246,7 +2301,6 @@ h2 {
         transform: translateY(0);
     }
 }
-
 
 @keyframes revealBouquet {
 
@@ -2267,15 +2321,14 @@ h2 {
     }
 }
 
-
 @keyframes bouquetFlowerPop {
 
     from {
         opacity: 0;
 
         transform:
-            translate(-50%,-50%)
-            scale(.3)
+            translate(-50%, -50%)
+            scale(.25)
             rotate(0deg);
     }
 
@@ -2283,12 +2336,11 @@ h2 {
         opacity: 1;
 
         transform:
-            translate(-50%,-50%)
+            translate(-50%, -50%)
             scale(1)
-            rotate(var(--rotation));
+            rotate(var(--rotation, 0deg));
     }
 }
-
 
 @keyframes miniFlowerFloat {
 
@@ -2473,21 +2525,46 @@ h2 {
         grid-template-columns: 1fr;
     }
 
+
+    /* -----------------------------
+       MOBILE BOUQUET
+       ----------------------------- */
+
     .bouquet-visual {
-        height: 390px;
+        width: 100%;
+        height: 470px;
     }
 
     .bouquet-paper {
-        width: 165px;
-        height: 195px;
+        width: 215px;
+        height: 255px;
+        bottom: 18px;
+    }
+
+    .bouquet-stems {
+        width: 225px;
+        height: 270px;
+        bottom: 82px;
     }
 
     .bouquet-flower-head {
-        font-size: 41px;
+        font-size: 48px;
     }
 
     .bouquet-greenery-item {
-        font-size: 40px;
+        font-size: 43px;
+    }
+
+    .bouquet-bow {
+        bottom: 132px;
+
+        transform:
+            translateX(-50%)
+            scale(.9);
+    }
+
+    .bouquet-details {
+        display: none !important;
     }
 
     .letter-card {
@@ -2542,15 +2619,31 @@ h2 {
     }
 
     .bouquet-visual {
-        height: 360px;
+        height: 450px;
+    }
+
+    .bouquet-paper {
+        width: 200px;
+        height: 240px;
+    }
+
+    .bouquet-stems {
+        width: 210px;
+        height: 250px;
     }
 
     .bouquet-flower-head {
-        font-size: 37px;
+        font-size: 43px;
     }
 
     .bouquet-greenery-item {
-        font-size: 36px;
+        font-size: 39px;
+    }
+
+    .bouquet-bow {
+        transform:
+            translateX(-50%)
+            scale(.82);
     }
 
     .letter-body p {
