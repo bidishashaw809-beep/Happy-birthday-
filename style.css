@@ -2324,3 +2324,591 @@ h2 {
             scale(.72);
     }
 }
+/* =========================================================
+   FINAL BOUQUET + MULTI-FLOWER FIXES
+   ========================================================= */
+
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.birthday-app {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+/* -------------------------
+   MULTI FLOWER SELECTION
+   ------------------------- */
+
+.selection-panel {
+    min-height: 58px;
+}
+
+.selection-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    margin: 2px 5px 2px 0;
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    background: #f8e8ed;
+
+    color: #73545d;
+
+    font-size: 11px;
+}
+
+.tiny-flower {
+    display: inline-flex !important;
+
+    width: 17px !important;
+    height: 17px !important;
+
+    font-size: 15px !important;
+}
+
+
+/* -------------------------
+   CUSTOM LAVENDER
+   ------------------------- */
+
+.custom-flower {
+    position: relative;
+
+    display: inline-block;
+
+    width: 32px;
+    height: 34px;
+}
+
+.lavender-flower i {
+    position: absolute;
+
+    width: 10px;
+    height: 14px;
+
+    border-radius: 70% 70% 55% 55%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d9a9dc,
+            #9470ba
+        );
+
+    transform-origin: bottom center;
+}
+
+.lavender-flower i:nth-child(1) {
+    left: 11px;
+    top: 1px;
+}
+
+.lavender-flower i:nth-child(2) {
+    left: 3px;
+    top: 9px;
+    transform: rotate(-28deg);
+}
+
+.lavender-flower i:nth-child(3) {
+    right: 3px;
+    top: 9px;
+    transform: rotate(28deg);
+}
+
+.lavender-flower i:nth-child(4) {
+    left: 8px;
+    top: 16px;
+    transform: rotate(-14deg);
+}
+
+.lavender-flower i:nth-child(5) {
+    right: 8px;
+    top: 16px;
+    transform: rotate(14deg);
+}
+
+.lavender-flower::after {
+    content: "";
+
+    position: absolute;
+
+    left: 15px;
+    top: 12px;
+
+    width: 4px;
+    height: 23px;
+
+    border-radius: 5px;
+
+    background: #5e914e;
+}
+
+
+/* Bluebell */
+
+.bluebell-flower i {
+    position: absolute;
+
+    width: 10px;
+    height: 13px;
+
+    border-radius: 50% 50% 55% 55%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #72c7ed,
+            #3789d0
+        );
+}
+
+.bluebell-flower i:nth-child(1) {
+    left: 3px;
+    top: 8px;
+}
+
+.bluebell-flower i:nth-child(2) {
+    left: 11px;
+    top: 1px;
+}
+
+.bluebell-flower i:nth-child(3) {
+    right: 3px;
+    top: 8px;
+}
+
+.bluebell-flower::after {
+    content: "";
+
+    position: absolute;
+
+    left: 15px;
+    top: 12px;
+
+    width: 4px;
+    height: 22px;
+
+    background: #5d9951;
+
+    border-radius: 4px;
+}
+
+
+/* -------------------------
+   FLOWER CARD CUSTOM ICON
+   ------------------------- */
+
+.flower-card .custom-flower {
+    transform: scale(.85);
+}
+
+.flower-card .emoji-flower {
+    display: inline-block;
+    font-size: 25px;
+}
+
+
+/* -------------------------
+   RIBBON CARDS
+   ------------------------- */
+
+.css-ribbon-icon {
+    position: relative;
+
+    display: inline-block;
+
+    width: 39px;
+    height: 29px;
+}
+
+.css-ribbon-icon i {
+    position: absolute;
+
+    top: 2px;
+
+    width: 20px;
+    height: 20px;
+
+    background: var(--ribbon-color);
+
+    border: 1px solid rgba(80,50,60,.08);
+
+    border-radius: 60% 45% 45% 60%;
+}
+
+.css-ribbon-icon i:first-child {
+    left: 0;
+
+    transform: rotate(25deg);
+}
+
+.css-ribbon-icon i:nth-child(2) {
+    right: 0;
+
+    transform: rotate(-25deg);
+}
+
+.css-ribbon-icon b {
+    position: absolute;
+
+    left: 50%;
+    top: 7px;
+
+    width: 12px;
+    height: 12px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: var(--ribbon-color);
+
+    z-index: 2;
+}
+
+.ribbon-preview {
+    min-height: 75px;
+}
+
+#ribbon-preview-icon {
+    display: flex;
+    align-items: center;
+}
+
+
+/* -------------------------
+   FINAL BOUQUET
+   ------------------------- */
+
+.bouquet-visual {
+    position: relative;
+
+    height: 540px;
+
+    overflow: hidden;
+}
+
+
+/*
+   Paper is BACK.
+*/
+
+.bouquet-paper {
+    z-index: 5;
+
+    bottom: 25px;
+
+    width: 300px;
+    height: 350px;
+
+    transform: translateX(-50%);
+
+    clip-path:
+        polygon(
+            7% 0,
+            93% 0,
+            100% 100%,
+            0 100%
+        );
+
+    border-radius: 5px 5px 22px 22px;
+
+    box-shadow:
+        0 15px 28px rgba(65,45,55,.16);
+}
+
+
+/*
+   Stems form a FAN.
+*/
+
+.bouquet-stems {
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 25;
+}
+
+.bouquet-stem {
+    position: absolute;
+
+    width: 5px;
+
+    border-radius: 999px;
+
+    transform-origin: bottom center;
+
+    background:
+        linear-gradient(
+            90deg,
+            #315b35,
+            #6c9c5e,
+            #315b35
+        );
+
+    box-shadow:
+        1px 0 1px rgba(255,255,255,.25);
+}
+
+
+/*
+   Greenery sits BEHIND flower heads.
+*/
+
+.bouquet-greenery {
+    z-index: 35;
+}
+
+.bouquet-greenery-item {
+    font-size: 50px;
+
+    filter:
+        drop-shadow(
+            0 5px 4px rgba(45,75,40,.18)
+        );
+}
+
+
+/*
+   Flower heads sit ON TOP of stems.
+*/
+
+.bouquet-flowers {
+    z-index: 60;
+}
+
+.bouquet-flower-head {
+    width: 76px;
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: visible;
+
+    transform:
+        translate(-50%,-50%)
+        rotate(var(--rotation));
+}
+
+.bouquet-flower-icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transform: scale(1.05);
+}
+
+.bouquet-flower-icon.emoji-flower {
+    font-size: 61px;
+}
+
+.bouquet-flower-icon.custom-flower {
+    width: 58px;
+    height: 62px;
+
+    transform: scale(1.1);
+}
+
+
+/*
+   Bigger lavender in final bouquet.
+*/
+
+.bouquet-flower-icon.lavender-flower i {
+    width: 16px;
+    height: 20px;
+}
+
+.bouquet-flower-icon.lavender-flower i:nth-child(1) {
+    left: 20px;
+}
+
+.bouquet-flower-icon.lavender-flower i:nth-child(2) {
+    left: 7px;
+    top: 13px;
+}
+
+.bouquet-flower-icon.lavender-flower i:nth-child(3) {
+    right: 7px;
+    top: 13px;
+}
+
+.bouquet-flower-icon.lavender-flower i:nth-child(4) {
+    left: 14px;
+    top: 24px;
+}
+
+.bouquet-flower-icon.lavender-flower i:nth-child(5) {
+    right: 14px;
+    top: 24px;
+}
+
+.bouquet-flower-icon.lavender-flower::after {
+    left: 27px;
+    top: 20px;
+
+    width: 5px;
+    height: 42px;
+}
+
+
+/* -------------------------
+   FINAL RIBBON
+   ------------------------- */
+
+.bouquet-bow {
+    position: absolute;
+
+    left: 50%;
+    bottom: 110px;
+
+    width: 210px;
+    height: 125px;
+
+    transform: translateX(-50%);
+
+    z-index: 100;
+}
+
+.bow-loop {
+    position: absolute;
+
+    top: 8px;
+
+    width: 96px;
+    height: 66px;
+
+    background: var(--bow-color);
+
+    box-shadow:
+        inset 0 0 0 1px rgba(80,60,70,.06),
+        0 6px 8px rgba(50,45,55,.12);
+}
+
+.bow-loop.left {
+    left: 2px;
+
+    border-radius: 65% 35% 45% 60%;
+
+    transform: rotate(12deg);
+}
+
+.bow-loop.right {
+    right: 2px;
+
+    border-radius: 35% 65% 60% 45%;
+
+    transform: rotate(-12deg);
+}
+
+.bow-knot {
+    position: absolute;
+
+    left: 50%;
+    top: 29px;
+
+    width: 38px;
+    height: 38px;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background: var(--bow-color);
+
+    z-index: 5;
+}
+
+.bow-tail {
+    position: absolute;
+
+    top: 48px;
+
+    width: 42px;
+    height: 75px;
+
+    background: var(--bow-color);
+
+    clip-path:
+        polygon(
+            0 0,
+            100% 0,
+            82% 100%,
+            50% 76%,
+            18% 100%
+        );
+}
+
+.bow-tail.left {
+    left: 72px;
+
+    transform: rotate(7deg);
+}
+
+.bow-tail.right {
+    right: 72px;
+
+    transform: rotate(-7deg);
+}
+
+
+/* -------------------------
+   HIDE OLD DETAILS
+   ------------------------- */
+
+.bouquet-details {
+    display: none !important;
+}
+
+
+/* -------------------------
+   MOBILE BOUQUET
+   ------------------------- */
+
+@media (max-width:700px) {
+
+    .bouquet-visual {
+        width: 100%;
+        height: 490px;
+    }
+
+    .bouquet-paper {
+        width: 255px;
+        height: 315px;
+    }
+
+    .bouquet-flower-head {
+        width: 65px;
+        height: 65px;
+    }
+
+    .bouquet-flower-icon.emoji-flower {
+        font-size: 52px;
+    }
+
+    .bouquet-greenery-item {
+        font-size: 43px;
+    }
+
+    .bouquet-bow {
+        bottom: 103px;
+
+        transform:
+            translateX(-50%)
+            scale(.88);
+    }
+}
