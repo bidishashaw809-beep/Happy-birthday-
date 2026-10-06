@@ -3,9 +3,25 @@
    FINAL SCRIPT
    ========================================================= */
 
+"use strict";
 
 /* =========================================================
-   DATA
+   GLOBAL STATE
+   ========================================================= */
+
+const birthdayState = {
+    name: "",
+    age: 0,
+
+    flowers: [],
+    greenery: [],
+    ribbon: null,
+    wrapping: null
+};
+
+
+/* =========================================================
+   FLOWER DATA
    ========================================================= */
 
 const flowers = [
@@ -20,7 +36,7 @@ const flowers = [
     { name: "Hibiscus", emoji: "🌺" },
 
     { name: "Cherry Blossom", emoji: "🌸" },
-    { name: "Lavender", emoji: "LAVENDER" },
+    { name: "Lavender", emoji: "💜" },
     { name: "Peony", emoji: "🌸" },
     { name: "Lily", emoji: "🌷" },
 
@@ -31,8 +47,8 @@ const flowers = [
 
     { name: "Camellia", emoji: "🌺" },
     { name: "Marigold", emoji: "🌼" },
-    { name: "Bluebell", emoji: "BLUEBELL" },
-    { name: "Orchid", emoji: "🌺" }
+    { name: "Bluebell", emoji: "🔷" },
+    { name: "Orchid", emoji: "🌸" }
 ];
 
 
@@ -51,75 +67,44 @@ const greenery = [
 
 
 const ribbons = [
-    { name: "Baby Blue", color: "#8dc8ed" },
-    { name: "Blush Pink", color: "#e7a8b9" },
-    { name: "Rose Pink", color: "#d97f9e" },
-    { name: "Cream", color: "#ead8b7" },
-    { name: "Sage Green", color: "#9caf8b" },
-    { name: "Butter Yellow", color: "#e9d477" },
-    { name: "Dusty Rose", color: "#bd8294" },
-    { name: "Peach", color: "#efad91" },
-    { name: "White", color: "#f4eeee" }
+    { name: "Baby Blue", color: "#91cbed" },
+    { name: "Blush Pink", color: "#e8a6b8" },
+    { name: "Rose Pink", color: "#d87896" },
+    { name: "Cream", color: "#e8d7b6" },
+    { name: "Sage Green", color: "#9dbb9a" },
+    { name: "Butter Yellow", color: "#f2d47a" },
+    { name: "Dusty Rose", color: "#c98598" },
+    { name: "Peach", color: "#efb08f" },
+    { name: "White", color: "#ffffff" },
+    { name: "Lavender", color: "#b99bd8" }
 ];
 
 
 const wrappings = [
-    { name: "Peach Blush", color: "#efb39c" },
-    { name: "Lavender Mist", color: "#c8b5df" },
-    { name: "Sage Garden", color: "#b6c8a7" },
-    { name: "Rose Paper", color: "#e5a5b5" },
-    { name: "Cream Linen", color: "#e9d9bd" },
-    { name: "Baby Pink", color: "#efc1ce" },
-    { name: "Soft Blue", color: "#b7d2e8" },
-    { name: "Dusty Mauve", color: "#b99eae" }
+    { name: "Peach Blush", color: "#eeb7a1" },
+    { name: "Lavender Mist", color: "#bba8dc" },
+    { name: "Sage Garden", color: "#a9c4a1" },
+    { name: "Rose Paper", color: "#e7a5b7" },
+    { name: "Cream Linen", color: "#e8d9c5" },
+    { name: "Baby Pink", color: "#f2c4cf" },
+    { name: "Soft Blue", color: "#a9cde2" },
+    { name: "Dusty Mauve", color: "#b998a8" }
 ];
 
 
 /* =========================================================
-   GLOBAL STATE
-   ========================================================= */
-
-const birthday = {
-    name: "",
-    age: 0,
-
-    flowers: [],
-
-    greenery: [],
-
-    ribbon: null,
-
-    wrapping: null
-};
-
-
-/* =========================================================
-   TEMPORARY SELECTION STATE
-   ========================================================= */
-
-let currentFlowerSelection = null;
-let currentGreenerySelection = null;
-
-let currentFlowerQuantity = 1;
-let currentGreeneryQuantity = 1;
-
-
-/* =========================================================
-   DOM HELPERS
+   HELPERS
    ========================================================= */
 
 const $ = id => document.getElementById(id);
 
-function showElement(element) {
-    if (element) {
-        element.classList.remove("hidden");
-    }
-}
-
-function hideElement(element) {
-    if (element) {
-        element.classList.add("hidden");
-    }
+function safeText(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
@@ -135,9 +120,9 @@ function showBirthdayScreen(id) {
 
     const target = $(id);
 
-    if (target) {
-        target.classList.add("active");
-    }
+    if (!target) return;
+
+    target.classList.add("active");
 
     window.scrollTo({
         top: 0,
@@ -147,10 +132,10 @@ function showBirthdayScreen(id) {
 
 
 /* =========================================================
-   PERSONALIZE
+   PERSONALIZATION
    ========================================================= */
 
-$("personalize-next").addEventListener("click", () => {
+$("personalize-next")?.addEventListener("click", () => {
 
     const nameInput = $("name-input");
     const ageInput = $("age-input");
@@ -159,30 +144,24 @@ $("personalize-next").addEventListener("click", () => {
     const name = nameInput.value.trim();
     const age = Number(ageInput.value);
 
+    error.textContent = "";
+
     if (!name) {
-        error.textContent = "Tell me your name first ♡";
+        error.textContent = "Please tell me your name first. ♡";
         nameInput.focus();
         return;
     }
 
     if (!age || age < 1 || age > 120) {
-        error.textContent = "Enter a valid age.";
+        error.textContent = "Please enter a valid age.";
         ageInput.focus();
         return;
     }
 
-    birthday.name = name;
-    birthday.age = age;
+    birthdayState.name = name;
+    birthdayState.age = age;
 
-    error.textContent = "";
-
-    $("birthday-name-banner").textContent = birthday.name;
-
-    $("letter-name").textContent = birthday.name;
-    $("letter-name-inside").textContent = birthday.name;
-    $("final-name").textContent = birthday.name;
-
-    createCandles(birthday.age);
+    $("birthday-name-banner").textContent = name;
 
     showBirthdayScreen("screen-dark-room");
 });
@@ -192,51 +171,207 @@ $("personalize-next").addEventListener("click", () => {
    DARK ROOM → LIGHTS
    ========================================================= */
 
-$("lights-button").addEventListener("click", () => {
+$("lights-button")?.addEventListener("click", () => {
 
-    showBirthdayScreen("screen-birthday-room");
+    const darkRoom = $("screen-dark-room");
 
-    const room = $("screen-birthday-room");
+    darkRoom.classList.add("lights-coming-on");
 
-    room.classList.remove("room-revealed");
+    setTimeout(() => {
 
-    requestAnimationFrame(() => {
+        showBirthdayScreen("screen-birthday-room");
 
-        setTimeout(() => {
-            room.classList.add("room-revealed");
-        }, 150);
+        const room = $("screen-birthday-room");
 
-    });
+        room.classList.add("room-revealed");
+
+        buildBirthdayAnimals();
+        buildBirthdayCandles();
+
+    }, 900);
 });
 
 
 /* =========================================================
-   CANDLES
+   BIRTHDAY ANIMALS
    ========================================================= */
 
-function createCandles(age) {
+function buildBirthdayAnimals() {
+
+    const animalsContainer =
+        document.querySelector(".birthday-animals");
+
+    if (!animalsContainer) return;
+
+    /*
+       We keep the original four animals from the HTML,
+       but FORCE their sizing/positioning here so they
+       cannot collapse into tiny emoji.
+    */
+
+    const animalData = [
+        {
+            selector: ".animal-1",
+            emoji: "🐰",
+            left: "5%"
+        },
+        {
+            selector: ".animal-2",
+            emoji: "🐻",
+            left: "29%"
+        },
+        {
+            selector: ".animal-3",
+            emoji: "🐱",
+            right: "29%"
+        },
+        {
+            selector: ".animal-4",
+            emoji: "🐶",
+            right: "5%"
+        }
+    ];
+
+    animalsContainer.style.position = "absolute";
+    animalsContainer.style.left = "0";
+    animalsContainer.style.right = "0";
+    animalsContainer.style.top = "0";
+    animalsContainer.style.width = "100%";
+    animalsContainer.style.height = "100%";
+    animalsContainer.style.zIndex = "40";
+    animalsContainer.style.pointerEvents = "none";
+
+    animalData.forEach((animal, index) => {
+
+        const element =
+            animalsContainer.querySelector(animal.selector);
+
+        if (!element) return;
+
+        const body = element.querySelector(".animal-body");
+
+        if (!body) return;
+
+        element.style.position = "absolute";
+        element.style.bottom = "0";
+        element.style.left =
+            animal.left || "auto";
+        element.style.right =
+            animal.right || "auto";
+
+        element.style.width = "70px";
+        element.style.height = "82px";
+
+        element.style.display = "flex";
+        element.style.alignItems = "flex-end";
+        element.style.justifyContent = "center";
+
+        element.style.zIndex = "45";
+
+        body.textContent = animal.emoji;
+
+        /*
+           IMPORTANT:
+           Do NOT allow the emoji to inherit the tiny
+           text size from the surrounding page.
+        */
+
+        body.style.display = "block";
+        body.style.fontSize = "60px";
+        body.style.lineHeight = "1";
+        body.style.width = "auto";
+        body.style.height = "auto";
+        body.style.position = "relative";
+
+        body.style.filter =
+            "drop-shadow(0 5px 4px rgba(70,50,50,.15))";
+
+        body.style.animation =
+            `birthdayAnimalIdle 3s ease-in-out ${index * 0.3}s infinite`;
+    });
+}
+
+
+/* =========================================================
+   BIRTHDAY CANDLES
+   ========================================================= */
+
+function buildBirthdayCandles() {
 
     const container = $("cake-candles");
 
+    if (!container) return;
+
     container.innerHTML = "";
 
-    const ageString = String(age);
+    const age = Math.max(
+        1,
+        Math.min(
+            120,
+            Number(birthdayState.age) || 1
+        )
+    );
 
-    [...ageString].forEach((digit, index) => {
+    /*
+       EXACTLY ONE CANDLE PER YEAR.
+
+       18 years = 18 candles
+       20 years = 20 candles
+       25 years = 25 candles
+
+       They are automatically arranged in rows so
+       large ages don't become an impossible single line.
+    */
+
+    const candleCount = age;
+
+    container.className = "cake-candles age-candles";
+
+    const columns =
+        age <= 8 ? age :
+        age <= 18 ? 9 :
+        age <= 30 ? 10 :
+        12;
+
+    const rows = Math.ceil(candleCount / columns);
+
+    container.style.display = "grid";
+    container.style.gridTemplateColumns =
+        `repeat(${columns}, 1fr)`;
+
+    container.style.columnGap = "3px";
+    container.style.rowGap = "3px";
+
+    container.style.width =
+        age <= 10 ? "150px" : "205px";
+
+    container.style.height =
+        `${Math.max(55, rows * 29)}px`;
+
+    container.style.position = "absolute";
+    container.style.left = "50%";
+    container.style.top =
+        age <= 10 ? "-48px" : "-78px";
+
+    container.style.transform =
+        "translateX(-50%)";
+
+    container.style.zIndex = "100";
+
+    for (let i = 0; i < candleCount; i++) {
 
         const candle = document.createElement("div");
 
-        candle.className = "number-candle";
+        candle.className = "birthday-single-candle";
 
         candle.innerHTML = `
-            <div class="number-flame"></div>
-            <div class="number-candle-digit">${digit}</div>
+            <span class="birthday-flame"></span>
+            <span class="birthday-wick"></span>
+            <span class="birthday-candle-stick"></span>
         `;
 
-        candle.style.animationDelay = `${index * 100}ms`;
-
         container.appendChild(candle);
-    });
+    }
 }
 
 
@@ -244,21 +379,35 @@ function createCandles(age) {
    BLOW OUT CANDLES
    ========================================================= */
 
-$("blow-candles-button").addEventListener("click", () => {
+$("blow-candles-button")?.addEventListener("click", () => {
 
-    document.querySelectorAll(".number-candle").forEach((candle, index) => {
+    const candles =
+        document.querySelectorAll(
+            ".birthday-single-candle"
+        );
+
+    candles.forEach((candle, index) => {
 
         setTimeout(() => {
             candle.classList.add("blown");
-        }, index * 100);
+        }, index * 22);
 
     });
 
-    $("cake-interaction").classList.add("hidden");
+    const interaction = $("cake-interaction");
+    const afterCake = $("after-cake");
 
     setTimeout(() => {
-        showElement($("after-cake"));
-    }, 900);
+
+        if (interaction) {
+            interaction.classList.add("hidden");
+        }
+
+        if (afterCake) {
+            afterCake.classList.remove("hidden");
+        }
+
+    }, Math.min(1000, candles.length * 22 + 300));
 });
 
 
@@ -266,539 +415,360 @@ $("blow-candles-button").addEventListener("click", () => {
    GO TO FLOWER SHOP
    ========================================================= */
 
-$("to-flower-shop").addEventListener("click", () => {
-
-    resetFlowerShop();
+$("to-flower-shop")?.addEventListener("click", () => {
 
     showBirthdayScreen("screen-flower-shop");
 
-    showShopStep(1);
+    $("bouquet-reveal")?.classList.add("hidden");
+
+    $("shop-step-1")?.classList.add("active");
+
+    [
+        "shop-step-2",
+        "shop-step-3",
+        "shop-step-4",
+        "shop-step-5"
+    ].forEach(id => {
+        $(id)?.classList.remove("active");
+    });
+
+    updateShopProgress(1);
 });
-
-
-/* =========================================================
-   FLOWER SHOP STATE
-   ========================================================= */
-
-let currentShopStep = 1;
-
-
-/* =========================================================
-   SHOP STEP NAVIGATION
-   ========================================================= */
-
-function showShopStep(step) {
-
-    currentShopStep = step;
-
-    document.querySelectorAll(".shop-step").forEach(item => {
-        item.classList.remove("active");
-    });
-
-    const target = $(`shop-step-${step}`);
-
-    if (target) {
-        target.classList.add("active");
-    }
-
-    const labels = [
-        "Choose your flowers",
-        "Add another flower",
-        "Choose your greenery",
-        "Pick your ribbon",
-        "Choose your wrapping"
-    ];
-
-    $("shop-step-label").textContent = labels[step - 1];
-
-    $("shop-step-number").textContent = `${step} / 5`;
-
-    $("shop-progress-bar").style.width =
-        `${step * 20}%`;
-
-    updateBasketCount();
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-
-/* =========================================================
-   BASKET COUNT
-   ========================================================= */
-
-function updateBasketCount() {
-
-    let total = 0;
-
-    birthday.flowers.forEach(item => {
-        total += item.quantity;
-    });
-
-    birthday.greenery.forEach(item => {
-        total += item.quantity;
-    });
-
-    $("basket-count").textContent = total;
-}
 
 
 /* =========================================================
    FLOWER CARDS
    ========================================================= */
 
-function createFlowerCards(containerId) {
+function createFlowerCard(flower, container, selectionMode) {
 
-    const container = $(containerId);
+    const card = document.createElement("button");
 
-    if (!container) return;
+    card.type = "button";
+    card.className = "flower-card";
 
-    container.innerHTML = "";
+    card.dataset.flower = flower.name;
 
-    flowers.forEach((flower, index) => {
+    /*
+       Lavender gets an actual visible flower drawing
+       instead of relying on the purple emoji.
+    */
 
-        const card = document.createElement("button");
-
-        card.type = "button";
-
-        card.className = "flower-card";
-
-        card.dataset.index = index;
-
-        const icon =
-            flower.emoji === "LAVENDER"
-                ? createLavenderIcon()
-                : flower.emoji === "BLUEBELL"
-                    ? createBluebellIcon()
-                    : `<span class="emoji-flower">${flower.emoji}</span>`;
+    if (flower.name === "Lavender") {
 
         card.innerHTML = `
-            ${icon}
-            <span class="flower-name">${flower.name}</span>
+            <span class="custom-flower lavender-flower">
+                <i></i><i></i><i></i><i></i><i></i>
+            </span>
+            <span class="flower-name">Lavender</span>
         `;
-
-        card.addEventListener("click", () => {
-
-            selectFlower(flower);
-
-            updateFlowerCardStates(container);
-
-        });
-
-        container.appendChild(card);
-    });
-}
-
-
-/* =========================================================
-   LAVENDER ICON
-   ========================================================= */
-
-function createLavenderIcon() {
-
-    return `
-        <span class="custom-flower lavender-flower">
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-    `;
-}
-
-
-/* =========================================================
-   BLUEBELL ICON
-   ========================================================= */
-
-function createBluebellIcon() {
-
-    return `
-        <span class="custom-flower bluebell-flower">
-            <i></i>
-            <i></i>
-            <i></i>
-        </span>
-    `;
-}
-
-
-/* =========================================================
-   SELECT FLOWER
-   ========================================================= */
-
-function selectFlower(flower) {
-
-    currentFlowerSelection = flower;
-
-    const existing = birthday.flowers.find(
-        item => item.name === flower.name
-    );
-
-    if (existing) {
-
-        currentFlowerQuantity = existing.quantity;
 
     } else {
 
-        currentFlowerQuantity = 1;
-
-        birthday.flowers.push({
-            name: flower.name,
-            emoji: flower.emoji,
-            quantity: 1
-        });
+        card.innerHTML = `
+            <span class="emoji-flower">${flower.emoji}</span>
+            <span class="flower-name">${safeText(flower.name)}</span>
+        `;
     }
 
-    updateFlowerSelectionPanel();
+    card.addEventListener("click", () => {
 
-    updateBasketCount();
-}
+        /*
+           Each step still has its own current selection,
+           but selected flowers are stored in the actual
+           bouquet state.
+        */
 
+        if (selectionMode === 1) {
 
-/* =========================================================
-   FLOWER CARD STATES
-   ========================================================= */
+            selectedFlower1 = flower;
+            quantity1 = 1;
 
-function updateFlowerCardStates(container) {
+            document
+                .querySelectorAll("#flower-grid-1 .flower-card")
+                .forEach(c => c.classList.remove("selected"));
 
-    container.querySelectorAll(".flower-card").forEach(card => {
+            card.classList.add("selected");
 
-        const index = Number(card.dataset.index);
+            $("selected-flower-1").innerHTML =
+                renderSmallFlower(flower);
 
-        const flower = flowers[index];
+            $("add-first-flower").disabled = false;
 
-        const selected = birthday.flowers.some(
-            item => item.name === flower.name
-        );
+        } else {
 
-        card.classList.toggle("selected", selected);
+            selectedFlower2 = flower;
+            quantity2 = 1;
+
+            document
+                .querySelectorAll("#flower-grid-2 .flower-card")
+                .forEach(c => c.classList.remove("selected"));
+
+            card.classList.add("selected");
+
+            $("selected-flower-2").innerHTML =
+                renderSmallFlower(flower);
+
+            $("add-second-flower").disabled = false;
+        }
     });
+
+    container.appendChild(card);
 }
 
 
-/* =========================================================
-   FLOWER SELECTION PANEL
-   ========================================================= */
+function renderSmallFlower(flower) {
 
-function updateFlowerSelectionPanel() {
+    if (flower.name === "Lavender") {
 
-    const firstPanel = $("selected-flower-1");
-    const secondPanel = $("selected-flower-2");
-
-    const html = birthday.flowers.length
-        ? birthday.flowers.map(item => {
-
-            const flower = flowers.find(
-                f => f.name === item.name
-            );
-
-            return `
-                <span class="selection-chip">
-                    ${getFlowerVisual(flower)}
-                    ${item.name} × ${item.quantity}
-                </span>
-            `;
-
-        }).join("")
-        : "Nothing chosen yet";
-
-    if (firstPanel) {
-        firstPanel.innerHTML = html;
-    }
-
-    if (secondPanel) {
-        secondPanel.innerHTML = html;
-    }
-
-    $("add-first-flower").disabled =
-        birthday.flowers.length === 0;
-
-    $("add-second-flower").disabled =
-        birthday.flowers.length === 0;
-}
-
-
-/* =========================================================
-   FLOWER VISUAL HELPER
-   ========================================================= */
-
-function getFlowerVisual(flower) {
-
-    if (!flower) return "";
-
-    if (flower.emoji === "LAVENDER") {
         return `
-            <span class="tiny-flower">
-                <span class="custom-flower lavender-flower">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                    <i></i>
+            <span class="selection-chip">
+                <span class="tiny-flower lavender-flower">
+                    <i></i><i></i><i></i><i></i><i></i>
                 </span>
+                Lavender
             </span>
         `;
-    }
 
-    if (flower.emoji === "BLUEBELL") {
-        return `
-            <span class="tiny-flower">
-                <span class="custom-flower bluebell-flower">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                </span>
-            </span>
-        `;
     }
 
     return `
-        <span class="tiny-flower">
-            ${flower.emoji}
+        <span class="selection-chip">
+            <span class="tiny-flower">
+                ${flower.emoji}
+            </span>
+            ${safeText(flower.name)}
         </span>
     `;
 }
 
 
 /* =========================================================
-   QUANTITY
+   FLOWER SELECTION STATE
    ========================================================= */
 
-function changeFlowerQuantity(amount) {
+let selectedFlower1 = null;
+let selectedFlower2 = null;
 
-    if (!currentFlowerSelection) return;
+let quantity1 = 1;
+let quantity2 = 1;
 
-    const item = birthday.flowers.find(
-        flower => flower.name === currentFlowerSelection.name
-    );
 
-    if (!item) return;
+/* =========================================================
+   CREATE FLOWER GRIDS
+   ========================================================= */
 
-    item.quantity += amount;
+function createFlowerGrids() {
 
-    if (item.quantity < 1) {
-        item.quantity = 1;
-    }
+    const grid1 = $("flower-grid-1");
+    const grid2 = $("flower-grid-2");
 
-    if (item.quantity > 12) {
-        item.quantity = 12;
-    }
+    if (!grid1 || !grid2) return;
 
-    currentFlowerQuantity = item.quantity;
+    grid1.innerHTML = "";
+    grid2.innerHTML = "";
 
-    $("flower-quantity").textContent =
-        currentFlowerQuantity;
+    flowers.forEach(flower => {
+        createFlowerCard(flower, grid1, 1);
+    });
 
-    $("flower-quantity-2").textContent =
-        currentFlowerQuantity;
-
-    updateFlowerSelectionPanel();
-
-    updateBasketCount();
+    flowers.forEach(flower => {
+        createFlowerCard(flower, grid2, 2);
+    });
 }
 
 
-$("quantity-minus").addEventListener("click", () => {
-    changeFlowerQuantity(-1);
+/* =========================================================
+   QUANTITY CONTROLS
+   ========================================================= */
+
+$("quantity-minus")?.addEventListener("click", () => {
+
+    if (quantity1 > 1) quantity1--;
+
+    $("flower-quantity").textContent = quantity1;
 });
 
-$("quantity-plus").addEventListener("click", () => {
-    changeFlowerQuantity(1);
+
+$("quantity-plus")?.addEventListener("click", () => {
+
+    if (quantity1 < 20) quantity1++;
+
+    $("flower-quantity").textContent = quantity1;
 });
 
-$("quantity-minus-2").addEventListener("click", () => {
-    changeFlowerQuantity(-1);
+
+$("quantity-minus-2")?.addEventListener("click", () => {
+
+    if (quantity2 > 1) quantity2--;
+
+    $("flower-quantity-2").textContent = quantity2;
 });
 
-$("quantity-plus-2").addEventListener("click", () => {
-    changeFlowerQuantity(1);
+
+$("quantity-plus-2")?.addEventListener("click", () => {
+
+    if (quantity2 < 20) quantity2++;
+
+    $("flower-quantity-2").textContent = quantity2;
 });
 
 
 /* =========================================================
-   FLOWER STEP 1
+   ADD FIRST FLOWER
    ========================================================= */
 
-$("add-first-flower").addEventListener("click", () => {
+$("add-first-flower")?.addEventListener("click", () => {
 
-    if (!birthday.flowers.length) return;
+    if (!selectedFlower1) return;
 
-    createFlowerCards("flower-grid-2");
-
-    updateFlowerSelectionPanel();
+    addFlowerToBouquet(
+        selectedFlower1,
+        quantity1
+    );
 
     showShopStep(2);
 });
 
 
 /* =========================================================
-   FLOWER STEP 2
+   ADD SECOND FLOWER
    ========================================================= */
 
-$("add-second-flower").addEventListener("click", () => {
+$("add-second-flower")?.addEventListener("click", () => {
 
-    if (!birthday.flowers.length) return;
+    if (!selectedFlower2) return;
 
-    createGreeneryCards();
+    addFlowerToBouquet(
+        selectedFlower2,
+        quantity2
+    );
 
+    showShopStep(3);
+});
+
+
+/* =========================================================
+   SKIP SECOND FLOWER
+   ========================================================= */
+
+$("skip-second-flower")?.addEventListener("click", () => {
     showShopStep(3);
 });
 
 
-$("skip-second-flower").addEventListener("click", () => {
+/* =========================================================
+   ADD FLOWER TO STATE
+   ========================================================= */
 
-    createGreeneryCards();
+function addFlowerToBouquet(flower, quantity) {
 
-    showShopStep(3);
-});
+    const existing =
+        birthdayState.flowers.find(
+            item => item.name === flower.name
+        );
+
+    if (existing) {
+        existing.quantity += quantity;
+    } else {
+        birthdayState.flowers.push({
+            name: flower.name,
+            emoji: flower.emoji,
+            quantity: quantity
+        });
+    }
+
+    updateBasketCount();
+}
 
 
 /* =========================================================
    GREENERY
    ========================================================= */
 
+let selectedGreenery = null;
+let greeneryQuantity = 1;
+
+
 function createGreeneryCards() {
 
-    const container = $("greenery-grid");
+    const grid = $("greenery-grid");
 
-    container.innerHTML = "";
+    if (!grid) return;
 
-    greenery.forEach((item, index) => {
+    grid.innerHTML = "";
+
+    greenery.forEach(item => {
 
         const card = document.createElement("button");
 
         card.type = "button";
-
         card.className = "greenery-card";
-
-        card.dataset.index = index;
 
         card.innerHTML = `
             <span class="greenery-emoji">${item.emoji}</span>
-            <span>${item.name}</span>
+            <span>${safeText(item.name)}</span>
         `;
 
         card.addEventListener("click", () => {
 
-            selectGreenery(item);
+            selectedGreenery = item;
 
-            container.querySelectorAll(".greenery-card")
-                .forEach(c => c.classList.remove("selected"));
+            document
+                .querySelectorAll(".greenery-card")
+                .forEach(c =>
+                    c.classList.remove("selected")
+                );
 
             card.classList.add("selected");
 
+            $("selected-greenery").innerHTML = `
+                ${item.emoji} ${safeText(item.name)}
+            `;
+
+            $("add-greenery").disabled = false;
         });
 
-        container.appendChild(card);
+        grid.appendChild(card);
     });
 }
 
 
-function selectGreenery(item) {
+$("greenery-minus")?.addEventListener("click", () => {
 
-    currentGreenerySelection = item;
-
-    const existing = birthday.greenery.find(
-        greeneryItem => greeneryItem.name === item.name
-    );
-
-    if (existing) {
-
-        currentGreeneryQuantity =
-            existing.quantity;
-
-    } else {
-
-        currentGreeneryQuantity = 1;
-
-        birthday.greenery.push({
-            name: item.name,
-            emoji: item.emoji,
-            quantity: 1
-        });
-    }
-
-    $("selected-greenery").innerHTML = `
-        <span class="selection-chip">
-            ${item.emoji}
-            ${item.name} × ${currentGreeneryQuantity}
-        </span>
-    `;
-
-    $("add-greenery").disabled = false;
-
-    updateBasketCount();
-}
-
-
-function changeGreeneryQuantity(amount) {
-
-    if (!currentGreenerySelection) return;
-
-    const item = birthday.greenery.find(
-        greeneryItem =>
-            greeneryItem.name === currentGreenerySelection.name
-    );
-
-    if (!item) return;
-
-    item.quantity += amount;
-
-    if (item.quantity < 1) {
-        item.quantity = 1;
-    }
-
-    if (item.quantity > 10) {
-        item.quantity = 10;
-    }
-
-    currentGreeneryQuantity = item.quantity;
+    if (greeneryQuantity > 1) greeneryQuantity--;
 
     $("greenery-quantity").textContent =
-        currentGreeneryQuantity;
+        greeneryQuantity;
+});
 
-    $("selected-greenery").innerHTML = `
-        <span class="selection-chip">
-            ${currentGreenerySelection.emoji}
-            ${currentGreenerySelection.name} × ${currentGreeneryQuantity}
-        </span>
-    `;
+
+$("greenery-plus")?.addEventListener("click", () => {
+
+    if (greeneryQuantity < 10) greeneryQuantity++;
+
+    $("greenery-quantity").textContent =
+        greeneryQuantity;
+});
+
+
+$("add-greenery")?.addEventListener("click", () => {
+
+    if (!selectedGreenery) return;
+
+    birthdayState.greenery.push({
+        name: selectedGreenery.name,
+        emoji: selectedGreenery.emoji,
+        quantity: greeneryQuantity
+    });
 
     updateBasketCount();
-}
-
-
-$("greenery-minus").addEventListener("click", () => {
-    changeGreeneryQuantity(-1);
-});
-
-$("greenery-plus").addEventListener("click", () => {
-    changeGreeneryQuantity(1);
-});
-
-
-/* =========================================================
-   GREENERY CONTINUE
-   ========================================================= */
-
-$("skip-greenery").addEventListener("click", () => {
-
-    birthday.greenery = [];
-
-    createRibbonCards();
 
     showShopStep(4);
 });
 
 
-$("add-greenery").addEventListener("click", () => {
-
-    createRibbonCards();
-
+$("skip-greenery")?.addEventListener("click", () => {
     showShopStep(4);
 });
 
@@ -809,19 +779,18 @@ $("add-greenery").addEventListener("click", () => {
 
 function createRibbonCards() {
 
-    const container = $("ribbon-grid");
+    const grid = $("ribbon-grid");
 
-    container.innerHTML = "";
+    if (!grid) return;
 
-    ribbons.forEach((ribbon, index) => {
+    grid.innerHTML = "";
+
+    ribbons.forEach(ribbon => {
 
         const card = document.createElement("button");
 
         card.type = "button";
-
         card.className = "ribbon-card";
-
-        card.dataset.index = index;
 
         card.innerHTML = `
             <span
@@ -832,56 +801,46 @@ function createRibbonCards() {
                 <i></i>
                 <b></b>
             </span>
-
-            <span>${ribbon.name}</span>
+            <span>${safeText(ribbon.name)}</span>
         `;
 
         card.addEventListener("click", () => {
 
-            birthday.ribbon = ribbon;
+            birthdayState.ribbon = ribbon;
 
-            container.querySelectorAll(".ribbon-card")
-                .forEach(c => c.classList.remove("selected"));
+            document
+                .querySelectorAll(".ribbon-card")
+                .forEach(c =>
+                    c.classList.remove("selected")
+                );
 
             card.classList.add("selected");
 
-            updateRibbonPreview();
+            $("ribbon-preview-name").textContent =
+                ribbon.name;
+
+            $("ribbon-preview-icon").innerHTML = `
+                <span
+                    class="css-ribbon-icon"
+                    style="--ribbon-color:${ribbon.color}"
+                >
+                    <i></i>
+                    <i></i>
+                    <b></b>
+                </span>
+            `;
 
             $("add-ribbon").disabled = false;
         });
 
-        container.appendChild(card);
+        grid.appendChild(card);
     });
 }
 
 
-function updateRibbonPreview() {
+$("add-ribbon")?.addEventListener("click", () => {
 
-    if (!birthday.ribbon) return;
-
-    $("ribbon-preview-icon").innerHTML = `
-        <span
-            class="css-ribbon-icon"
-            style="--ribbon-color:${birthday.ribbon.color}"
-        >
-            <i></i>
-            <i></i>
-            <b></b>
-        </span>
-    `;
-
-    $("ribbon-preview-name").textContent =
-        birthday.ribbon.name;
-}
-
-
-/* =========================================================
-   RIBBON CONTINUE
-   ========================================================= */
-
-$("add-ribbon").addEventListener("click", () => {
-
-    createWrappingCards();
+    if (!birthdayState.ribbon) return;
 
     showShopStep(5);
 });
@@ -893,267 +852,292 @@ $("add-ribbon").addEventListener("click", () => {
 
 function createWrappingCards() {
 
-    const container = $("wrapping-grid");
+    const grid = $("wrapping-grid");
 
-    container.innerHTML = "";
+    if (!grid) return;
 
-    wrappings.forEach((wrapping, index) => {
+    grid.innerHTML = "";
+
+    wrappings.forEach(wrapping => {
 
         const card = document.createElement("button");
 
         card.type = "button";
-
         card.className = "wrapping-card";
-
-        card.dataset.index = index;
 
         card.innerHTML = `
             <span
                 class="paper-preview"
                 style="--wrap-color:${wrapping.color}"
             ></span>
-
-            <span>${wrapping.name}</span>
+            <span>${safeText(wrapping.name)}</span>
         `;
 
         card.addEventListener("click", () => {
 
-            birthday.wrapping = wrapping;
+            birthdayState.wrapping = wrapping;
 
-            container.querySelectorAll(".wrapping-card")
-                .forEach(c => c.classList.remove("selected"));
+            document
+                .querySelectorAll(".wrapping-card")
+                .forEach(c =>
+                    c.classList.remove("selected")
+                );
 
             card.classList.add("selected");
 
-            updateWrappingPreview();
+            $("wrapping-preview-name").textContent =
+                wrapping.name;
+
+            const preview =
+                $("wrapping-preview");
+
+            preview.style.background =
+                `linear-gradient(
+                    135deg,
+                    ${wrapping.color},
+                    #fff8f5
+                )`;
 
             $("add-wrapping").disabled = false;
         });
 
-        container.appendChild(card);
+        grid.appendChild(card);
     });
 }
 
 
-function updateWrappingPreview() {
+$("add-wrapping")?.addEventListener("click", () => {
 
-    if (!birthday.wrapping) return;
+    if (!birthdayState.wrapping) return;
 
-    $("wrapping-preview").style.background =
-        `linear-gradient(
-            135deg,
-            ${birthday.wrapping.color}55,
-            #fffaf8
-        )`;
+    buildBouquetVisual();
+    showBouquetReveal();
+});
 
-    $("wrapping-preview-name").textContent =
-        birthday.wrapping.name;
+
+/* =========================================================
+   SHOP NAVIGATION
+   ========================================================= */
+
+function showShopStep(number) {
+
+    for (let i = 1; i <= 5; i++) {
+
+        const step = $(`shop-step-${i}`);
+
+        if (!step) continue;
+
+        step.classList.toggle(
+            "active",
+            i === number
+        );
+    }
+
+    updateShopProgress(number);
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+function updateShopProgress(number) {
+
+    const labels = [
+        "Choose your flowers",
+        "Add another flower",
+        "Choose your greenery",
+        "Pick your ribbon",
+        "Choose your wrapping"
+    ];
+
+    if ($("shop-step-label")) {
+        $("shop-step-label").textContent =
+            labels[number - 1];
+    }
+
+    if ($("shop-step-number")) {
+        $("shop-step-number").textContent =
+            `${number} / 5`;
+    }
+
+    if ($("shop-progress-bar")) {
+        $("shop-progress-bar").style.width =
+            `${(number / 5) * 100}%`;
+    }
 }
 
 
 /* =========================================================
-   FINAL WRAP
+   BASKET
    ========================================================= */
 
-$("add-wrapping").addEventListener("click", () => {
+function updateBasketCount() {
 
-    buildFinalBouquet();
+    let total = 0;
 
-    document.querySelectorAll(".shop-step").forEach(step => {
-        step.classList.remove("active");
+    birthdayState.flowers.forEach(item => {
+        total += item.quantity;
     });
 
-    hideElement($("bouquet-reveal"));
-
-    requestAnimationFrame(() => {
-
-        showElement($("bouquet-reveal"));
-
-        $("shop-step-label").textContent =
-            "Your bouquet is ready";
-
-        $("shop-step-number").textContent =
-            "5 / 5";
-
-        $("shop-progress-bar").style.width =
-            "100%";
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-
+    birthdayState.greenery.forEach(item => {
+        total += item.quantity;
     });
-});
+
+    if ($("basket-count")) {
+        $("basket-count").textContent = total;
+    }
+}
 
 
 /* =========================================================
    FINAL BOUQUET
    ========================================================= */
 
-function buildFinalBouquet() {
+function buildBouquetVisual() {
 
-    const canvas = $("bouquet-visual");
+    const container = $("bouquet-visual");
 
-    canvas.innerHTML = "";
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    container.style.setProperty(
+        "--wrap-color",
+        birthdayState.wrapping?.color || "#c9b7df"
+    );
+
+    container.style.setProperty(
+        "--bow-color",
+        birthdayState.ribbon?.color || "#9ed1ee"
+    );
 
 
-    /* -----------------------------------------
-       PAPER
-       ----------------------------------------- */
+    /*
+       -----------------------------------------------------
+       WRAPPING
+       -----------------------------------------------------
+    */
 
     const paper = document.createElement("div");
 
     paper.className = "bouquet-paper";
 
-    paper.style.setProperty(
-        "--wrap-color",
-        birthday.wrapping
-            ? birthday.wrapping.color
-            : "#c8b5df"
-    );
-
-    canvas.appendChild(paper);
+    container.appendChild(paper);
 
 
-    /* -----------------------------------------
+    /*
+       -----------------------------------------------------
        STEMS
-       ----------------------------------------- */
+       -----------------------------------------------------
+    */
 
-    const stemsLayer = document.createElement("div");
+    const stems = document.createElement("div");
 
-    stemsLayer.className = "bouquet-stems";
+    stems.className = "bouquet-stems";
 
-    canvas.appendChild(stemsLayer);
-
-
-    /* -----------------------------------------
-       FLOWERS
-       ----------------------------------------- */
-
-    const flowerLayer = document.createElement("div");
-
-    flowerLayer.className = "bouquet-flowers";
-
-    canvas.appendChild(flowerLayer);
+    container.appendChild(stems);
 
 
-    /* -----------------------------------------
+    /*
+       -----------------------------------------------------
        GREENERY
-       ----------------------------------------- */
+       -----------------------------------------------------
+    */
 
     const greeneryLayer = document.createElement("div");
 
-    greeneryLayer.className = "bouquet-greenery";
+    greeneryLayer.className =
+        "bouquet-greenery";
 
-    canvas.appendChild(greeneryLayer);
+    container.appendChild(greeneryLayer);
 
 
-    /* -----------------------------------------
-       FLATTEN FLOWER QUANTITIES
-       ----------------------------------------- */
+    /*
+       -----------------------------------------------------
+       FLOWER HEADS
+       -----------------------------------------------------
+    */
 
-    const flowerInstances = [];
+    const flowerLayer = document.createElement("div");
 
-    birthday.flowers.forEach(flower => {
+    flowerLayer.className =
+        "bouquet-flowers";
 
-        for (let i = 0; i < flower.quantity; i++) {
+    container.appendChild(flowerLayer);
 
-            flowerInstances.push({
-                ...flower
+
+    const selectedFlowers = [];
+
+    birthdayState.flowers.forEach(item => {
+
+        for (let i = 0; i < item.quantity; i++) {
+
+            selectedFlowers.push({
+                name: item.name,
+                emoji: item.emoji
             });
-
         }
     });
 
 
-    /* -----------------------------------------
-       LIMIT VISUAL OVERFLOW
-       ----------------------------------------- */
+    /*
+       Fallback only if absolutely nothing was selected.
+       Normally this will never be used.
+    */
 
-    const visibleFlowers =
-        flowerInstances.slice(0, 24);
+    if (!selectedFlowers.length) {
+
+        selectedFlowers.push({
+            name: "Pink Rose",
+            emoji: "🌹"
+        });
+    }
 
 
     /*
-       Carefully arranged positions.
-
-       These positions are relative to the
-       bouquet canvas and create the wide
-       rounded bouquet shape from the inspiration.
+       Flower arrangement:
+       wide fan shape like a real hand-tied bouquet.
     */
 
-    const positions = [
-        [24, 40],
-        [33, 31],
-        [43, 24],
-        [53, 27],
-        [63, 24],
-        [73, 31],
-        [82, 40],
-
-        [29, 51],
-        [39, 45],
-        [50, 42],
-        [61, 45],
-        [71, 51],
-
-        [35, 60],
-        [47, 55],
-        [58, 55],
-        [67, 60],
-
-        [42, 67],
-        [55, 64],
-        [62, 69],
-
-        [50, 73]
-    ];
+    const positions = createBouquetPositions(
+        selectedFlowers.length
+    );
 
 
-    /* -----------------------------------------
-       CREATE EACH FLOWER + STEM
-       ----------------------------------------- */
-
-    visibleFlowers.forEach((flower, index) => {
+    selectedFlowers.forEach((flower, index) => {
 
         const position =
-            positions[index % positions.length];
+            positions[index];
 
-        const x = position[0];
-        const y = position[1];
+        /*
+           STEM
+        */
 
-        const rotation =
-            ((index % 5) - 2) * 5;
-
-
-        /* stem */
-
-        const stem =
-            document.createElement("div");
+        const stem = document.createElement("div");
 
         stem.className =
             "bouquet-stem";
 
         stem.style.left =
-            `${x}%`;
+            `${position.stemX}%`;
 
-        stem.style.top =
-            `${y + 3}%`;
-
-        const stemLength =
-            230 + ((index % 4) * 15);
+        stem.style.bottom =
+            "112px";
 
         stem.style.height =
-            `${stemLength}px`;
+            `${position.stemHeight}px`;
 
         stem.style.transform =
-            `rotate(${rotation * .35}deg)`;
+            `rotate(${position.stemRotation}deg)`;
 
-        stemsLayer.appendChild(stem);
+        stems.appendChild(stem);
 
 
-        /* flower */
+        /*
+           FLOWER HEAD
+        */
 
         const head =
             document.createElement("div");
@@ -1162,143 +1146,95 @@ function buildFinalBouquet() {
             "bouquet-flower-head";
 
         head.style.left =
-            `${x}%`;
+            `${position.x}%`;
 
         head.style.top =
-            `${y}%`;
+            `${position.y}%`;
 
         head.style.setProperty(
             "--rotation",
-            `${rotation}deg`
+            `${position.rotation}deg`
         );
 
-        head.style.animationDelay =
-            `${index * 55}ms`;
 
+        if (flower.name === "Lavender") {
 
-        let flowerVisual = "";
-
-        if (flower.emoji === "LAVENDER") {
-
-            flowerVisual = `
-                <span class="bouquet-flower-icon">
-                    <span class="custom-flower lavender-flower">
-                        <i></i>
-                        <i></i>
-                        <i></i>
-                        <i></i>
-                        <i></i>
-                    </span>
-                </span>
-            `;
-
-        } else if (flower.emoji === "BLUEBELL") {
-
-            flowerVisual = `
-                <span class="bouquet-flower-icon">
-                    <span class="custom-flower bluebell-flower">
-                        <i></i>
-                        <i></i>
-                        <i></i>
-                    </span>
+            head.innerHTML = `
+                <span class="custom-flower lavender-flower">
+                    <i></i><i></i><i></i><i></i><i></i>
                 </span>
             `;
 
         } else {
 
-            flowerVisual = `
-                <span class="bouquet-flower-icon emoji-flower">
+            head.innerHTML = `
+                <span class="bouquet-flower-icon">
                     ${flower.emoji}
                 </span>
             `;
         }
 
-
-        head.innerHTML = flowerVisual;
-
         flowerLayer.appendChild(head);
     });
 
 
-    /* -----------------------------------------
+    /*
+       -----------------------------------------------------
        GREENERY
-       ----------------------------------------- */
+       -----------------------------------------------------
+    */
 
-    const greeneryInstances = [];
+    const greeneryEntries = [];
 
-    birthday.greenery.forEach(item => {
+    birthdayState.greenery.forEach(item => {
 
         for (let i = 0; i < item.quantity; i++) {
 
-            greeneryInstances.push({
-                ...item
-            });
-
+            greeneryEntries.push(item);
         }
     });
 
 
-    const greeneryPositions = [
-        [15, 49, -25],
-        [19, 39, -35],
-        [23, 29, -20],
-        [85, 48, 25],
-        [82, 37, 32],
-        [78, 27, 20],
-        [27, 67, -18],
-        [74, 67, 20]
-    ];
+    greeneryEntries.forEach((item, index) => {
+
+        const leaf =
+            document.createElement("div");
+
+        leaf.className =
+            "bouquet-greenery-item";
+
+        leaf.textContent =
+            item.emoji;
+
+        const side =
+            index % 2 === 0 ? -1 : 1;
+
+        leaf.style.left =
+            `${50 + side * (28 + (index * 5))}%`;
+
+        leaf.style.top =
+            `${28 + (index * 8)}%`;
+
+        leaf.style.setProperty(
+            "--rotation",
+            `${side * (18 + index * 5)}deg`
+        );
+
+        greeneryLayer.appendChild(leaf);
+    });
 
 
-    greeneryInstances
-        .slice(0, 8)
-        .forEach((item, index) => {
-
-            const pos =
-                greeneryPositions[
-                    index % greeneryPositions.length
-                ];
-
-            const leaf =
-                document.createElement("span");
-
-            leaf.className =
-                "bouquet-greenery-item";
-
-            leaf.textContent =
-                item.emoji;
-
-            leaf.style.left =
-                `${pos[0]}%`;
-
-            leaf.style.top =
-                `${pos[1]}%`;
-
-            leaf.style.setProperty(
-                "--rotation",
-                `${pos[2]}deg`
-            );
-
-            greeneryLayer.appendChild(leaf);
-        });
-
-
-    /* -----------------------------------------
-       BOW
-       ----------------------------------------- */
+    /*
+       -----------------------------------------------------
+       RIBBON BOW
+       -----------------------------------------------------
+    */
 
     const bow =
         document.createElement("div");
 
     bow.className =
         "bouquet-bow";
-
-    bow.style.setProperty(
-        "--bow-color",
-        birthday.ribbon
-            ? birthday.ribbon.color
-            : "#9bc9ed"
-    );
 
     bow.innerHTML = `
         <span class="bow-loop left"></span>
@@ -1308,15 +1244,143 @@ function buildFinalBouquet() {
         <span class="bow-tail right"></span>
     `;
 
-    canvas.appendChild(bow);
+    container.appendChild(bow);
 
 
-    /* -----------------------------------------
-       MINI BOUQUET FOR LETTER
-       ----------------------------------------- */
+    /*
+       Hide the old flower-summary/details area.
+       The final reveal should LOOK like a gift, not
+       like an order receipt.
+    */
+
+    const details =
+        $("bouquet-details");
+
+    if (details) {
+        details.innerHTML = "";
+        details.style.display = "none";
+    }
+}
+
+
+/* =========================================================
+   BOUQUET POSITION GENERATOR
+   ========================================================= */
+
+function createBouquetPositions(count) {
+
+    const positions = [];
+
+    /*
+       A hand-tied bouquet has:
+       - taller flowers at the back
+       - medium flowers in the middle
+       - shorter flowers at the front
+       - stems converging toward the bottom
+    */
+
+    const center = 50;
+
+    for (let i = 0; i < count; i++) {
+
+        const normalized =
+            count === 1
+                ? .5
+                : i / (count - 1);
+
+        const spread =
+            (normalized - .5) * 66;
+
+        const x =
+            center + spread;
+
+        const y =
+            23 +
+            Math.abs(normalized - .5) * 18 +
+            (i % 3) * 4;
+
+        const stemX =
+            center +
+            spread * .42;
+
+        const stemHeight =
+            160 +
+            (i % 4) * 18;
+
+        const stemRotation =
+            spread * .18;
+
+        const rotation =
+            ((i % 5) - 2) * 5;
+
+        positions.push({
+            x,
+            y,
+            stemX,
+            stemHeight,
+            stemRotation,
+            rotation
+        });
+    }
+
+    return positions;
+}
+
+
+/* =========================================================
+   SHOW BOUQUET REVEAL
+   ========================================================= */
+
+function showBouquetReveal() {
+
+    [
+        "shop-step-1",
+        "shop-step-2",
+        "shop-step-3",
+        "shop-step-4",
+        "shop-step-5"
+    ].forEach(id => {
+        $(id)?.classList.remove("active");
+    });
+
+    $("bouquet-reveal")?.classList.remove("hidden");
+
+    /*
+       Keep the progress at the final stage.
+    */
+
+    updateShopProgress(5);
+
+    setTimeout(() => {
+
+        $("bouquet-reveal")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+
+    }, 100);
+}
+
+
+/* =========================================================
+   LETTER
+   ========================================================= */
+
+$("open-letter")?.addEventListener("click", () => {
+
+    $("letter-name").textContent =
+        birthdayState.name;
+
+    $("letter-name-inside").textContent =
+        birthdayState.name;
+
+    $("final-name").textContent =
+        birthdayState.name;
 
     buildMiniBouquet();
-}
+
+    showBirthdayScreen("screen-letter");
+});
 
 
 /* =========================================================
@@ -1328,57 +1392,42 @@ function buildMiniBouquet() {
     const container =
         $("final-bouquet-mini");
 
+    if (!container) return;
+
     container.innerHTML = "";
 
-    const flowersToShow =
-        birthday.flowers.slice(0, 5);
+    const selected = [];
 
-    flowersToShow.forEach((flower, index) => {
+    birthdayState.flowers.forEach(item => {
+
+        for (
+            let i = 0;
+            i < Math.min(item.quantity, 8);
+            i++
+        ) {
+            selected.push(item);
+        }
+    });
+
+    selected.forEach((flower, index) => {
 
         const item =
-            document.createElement("div");
+            document.createElement("span");
 
         item.className =
             "mini-flower";
 
-        let visual = "";
+        item.textContent =
+            flower.emoji;
 
-        if (flower.emoji === "LAVENDER") {
+        item.style.left =
+            `${25 + (index * 50) / Math.max(selected.length - 1, 1)}%`;
 
-            visual = `
-                <span class="custom-flower lavender-flower">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                </span>
-            `;
-
-        } else if (flower.emoji === "BLUEBELL") {
-
-            visual = `
-                <span class="custom-flower bluebell-flower">
-                    <i></i>
-                    <i></i>
-                    <i></i>
-                </span>
-            `;
-
-        } else {
-
-            visual = `
-                <span class="mini-flower-icon emoji-flower">
-                    ${flower.emoji}
-                </span>
-            `;
-        }
-
-        item.innerHTML = visual;
+        item.style.top =
+            `${45 - (index % 3) * 10}%`;
 
         item.style.transform =
-            `translateY(${Math.abs(index - 2) * 4}px)
-             rotate(${(index - 2) * 7}deg)`;
+            `translate(-50%, -50%) rotate(${(index % 5 - 2) * 5}deg)`;
 
         container.appendChild(item);
     });
@@ -1386,145 +1435,291 @@ function buildMiniBouquet() {
 
 
 /* =========================================================
-   LETTER
-   ========================================================= */
-
-$("open-letter").addEventListener("click", () => {
-
-    $("letter-name").textContent =
-        birthday.name;
-
-    $("letter-name-inside").textContent =
-        birthday.name;
-
-    $("final-name").textContent =
-        birthday.name;
-
-    showBirthdayScreen("screen-letter");
-});
-
-
-/* =========================================================
    RESTART
    ========================================================= */
 
-$("restart-birthday").addEventListener("click", () => {
+$("restart-birthday")?.addEventListener(
+    "click",
+    () => {
 
-    birthday.name = "";
-    birthday.age = 0;
+        birthdayState.name = "";
+        birthdayState.age = 0;
 
-    birthday.flowers = [];
-    birthday.greenery = [];
+        birthdayState.flowers = [];
+        birthdayState.greenery = [];
+        birthdayState.ribbon = null;
+        birthdayState.wrapping = null;
 
-    birthday.ribbon = null;
-    birthday.wrapping = null;
+        selectedFlower1 = null;
+        selectedFlower2 = null;
 
-    currentFlowerSelection = null;
-    currentGreenerySelection = null;
+        quantity1 = 1;
+        quantity2 = 1;
 
-    currentFlowerQuantity = 1;
-    currentGreeneryQuantity = 1;
+        greeneryQuantity = 1;
+        selectedGreenery = null;
 
-    $("name-input").value = "";
-    $("age-input").value = "";
+        if ($("name-input")) {
+            $("name-input").value = "";
+        }
 
-    $("personalize-error").textContent = "";
+        if ($("age-input")) {
+            $("age-input").value = "";
+        }
 
-    $("cake-interaction").classList.remove("hidden");
+        $("personalize-error").textContent = "";
 
-    hideElement($("after-cake"));
+        showBirthdayScreen("screen-personalize");
 
-    $("screen-birthday-room")
-        .classList.remove("room-revealed");
+        updateBasketCount();
 
-    createCandles(1);
-
-    resetFlowerShop();
-
-    showBirthdayScreen("screen-personalize");
-});
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+);
 
 
 /* =========================================================
-   RESET FLOWER SHOP
+   INITIALIZE SHOP
    ========================================================= */
 
-function resetFlowerShop() {
+createFlowerGrids();
+createGreeneryCards();
+createRibbonCards();
+createWrappingCards();
 
-    birthday.flowers = [];
-    birthday.greenery = [];
+updateBasketCount();
 
-    birthday.ribbon = null;
-    birthday.wrapping = null;
+updateShopProgress(1);
 
-    currentFlowerSelection = null;
-    currentGreenerySelection = null;
 
-    currentFlowerQuantity = 1;
-    currentGreeneryQuantity = 1;
+/* =========================================================
+   EXTRA BIRTHDAY-ROOM SAFETY
+   ========================================================= */
 
-    $("flower-quantity").textContent = "1";
-    $("flower-quantity-2").textContent = "1";
+/*
+   These rules are deliberately applied through JS too.
+   That means even if a CSS rule accidentally makes the
+   animals tiny, the birthday scene restores their intended
+   dimensions when it opens.
+*/
 
-    $("greenery-quantity").textContent = "1";
+const animalStyleSheet =
+    document.createElement("style");
 
-    $("selected-flower-1").textContent =
-        "Nothing chosen yet";
+animalStyleSheet.textContent = `
 
-    $("selected-flower-2").textContent =
-        "Nothing chosen yet";
+@keyframes birthdayAnimalIdle {
 
-    $("selected-greenery").textContent =
-        "None yet";
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
 
-    $("add-first-flower").disabled = true;
-    $("add-second-flower").disabled = true;
-    $("add-greenery").disabled = true;
-    $("add-ribbon").disabled = true;
-    $("add-wrapping").disabled = true;
-
-    $("ribbon-preview-icon").textContent = "🎀";
-    $("ribbon-preview-name").textContent =
-        "Choose your ribbon";
-
-    $("wrapping-preview-name").textContent =
-        "Choose your wrapping";
-
-    $("wrapping-preview").style.background =
-        "";
-
-    createFlowerCards("flower-grid-1");
-    createFlowerCards("flower-grid-2");
-    createGreeneryCards();
-    createRibbonCards();
-    createWrappingCards();
-
-    updateBasketCount();
+    50% {
+        transform: translateY(-5px) rotate(1deg);
+    }
 }
 
 
+/* REAL CANDLE */
+
+.birthday-single-candle {
+    position: relative;
+
+    width: 13px;
+    height: 27px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    margin: 0 auto;
+}
+
+
+.birthday-candle-stick {
+    width: 8px;
+    height: 20px;
+
+    border-radius: 3px 3px 2px 2px;
+
+    background:
+        repeating-linear-gradient(
+            135deg,
+            #f3b3c0 0 3px,
+            #fff0ed 3px 6px
+        );
+
+    box-shadow:
+        0 1px 2px rgba(90,50,60,.18);
+}
+
+
+.birthday-wick {
+    position: absolute;
+
+    width: 2px;
+    height: 4px;
+
+    top: 2px;
+
+    background: #574046;
+
+    border-radius: 2px;
+
+    z-index: 2;
+}
+
+
+.birthday-flame {
+    position: absolute;
+
+    top: -13px;
+
+    width: 9px;
+    height: 14px;
+
+    border-radius:
+        50% 50% 50% 50%;
+
+    background:
+        radial-gradient(
+            circle at 50% 70%,
+            #fff9a7 0 25%,
+            #ffc857 35%,
+            #ff8a3d 65%,
+            transparent 70%
+        );
+
+    filter:
+        drop-shadow(0 0 5px #ffbf5b);
+
+    animation:
+        candleFlame .55s ease-in-out infinite alternate;
+}
+
+
+.birthday-single-candle.blown
+.birthday-flame {
+    opacity: 0;
+    transform: scale(.1);
+    transition: .25s ease;
+}
+
+
+@keyframes candleFlame {
+
+    from {
+        transform:
+            rotate(-4deg)
+            scale(.9);
+    }
+
+    to {
+        transform:
+            rotate(4deg)
+            scale(1.08);
+    }
+}
+
+
+/* Make the animals impossible to accidentally collapse */
+
+.birthday-animals {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 40 !important;
+}
+
+
+.birthday-animals .animal {
+    z-index: 45 !important;
+}
+
+
+.birthday-animals .animal-body {
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    line-height: 1 !important;
+    font-size: 60px !important;
+}
+
+
+/* Keep birthday cake above the table */
+
+.birthday-cake {
+    z-index: 60 !important;
+}
+
+
+#cake-candles {
+    z-index: 100 !important;
+}
+
+
+/* Actual flower stems */
+
+.bouquet-stems {
+    z-index: 8 !important;
+    pointer-events: none;
+}
+
+
+.bouquet-stem {
+    position: absolute;
+
+    width: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #315f3b,
+            #71a060,
+            #315f3b
+        );
+
+    border-radius: 8px;
+
+    transform-origin:
+        bottom center;
+
+    z-index: 8;
+}
+
+
+.bouquet-paper {
+    z-index: 5 !important;
+}
+
+
+.bouquet-greenery {
+    z-index: 12 !important;
+}
+
+
+.bouquet-flowers {
+    z-index: 20 !important;
+}
+
+
+.bouquet-bow {
+    z-index: 40 !important;
+}
+
+`;
+
+document.head.appendChild(animalStyleSheet);
+
+
 /* =========================================================
-   INITIALISE
+   FINISHED
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    createFlowerCards("flower-grid-1");
-    createFlowerCards("flower-grid-2");
-
-    createGreeneryCards();
-
-    createRibbonCards();
-
-    createWrappingCards();
-
-    updateFlowerSelectionPanel();
-
-    updateBasketCount();
-
-    $("add-first-flower").disabled = true;
-    $("add-second-flower").disabled = true;
-    $("add-greenery").disabled = true;
-    $("add-ribbon").disabled = true;
-    $("add-wrapping").disabled = true;
-});
+console.log(
+    "A Little Birthday Surprise initialized successfully ♡"
+);
