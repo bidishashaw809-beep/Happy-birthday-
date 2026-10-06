@@ -1,0 +1,796 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>A Little Birthday Surprise</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head><body><main class="birthday-app">
+
+    <!-- =========================================
+         SCREEN 1 — PERSONALIZE
+         ========================================= -->
+
+    <section id="screen-personalize" class="birthday-screen active">
+
+        <div class="intro-content">
+
+            <div class="intro-symbol">
+                ✨
+            </div>
+
+            <p class="eyebrow">
+                A little surprise
+            </p>
+
+            <h1>
+                Before we begin...
+            </h1>
+
+            <p class="intro-text">
+                Tell me a little about the birthday person.
+            </p>
+
+            <div class="form-area">
+
+                <label for="name-input">
+                    What's your name?
+                </label>
+
+                <input
+                    type="text"
+                    id="name-input"
+                    placeholder="Your name"
+                    autocomplete="name"
+                    maxlength="30"
+                >
+
+
+                <label for="age-input">
+                    How old are you turning?
+                </label>
+
+                <input
+                    type="number"
+                    id="age-input"
+                    placeholder="Your age"
+                    min="1"
+                    max="120"
+                >
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="personalize-next">
+                Continue →
+            </button>
+
+            <p
+                id="personalize-error"
+                class="error-message"
+                aria-live="polite">
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SCREEN 2 — DARK ROOM
+         ========================================= -->
+
+    <section
+        id="screen-dark-room"
+        class="birthday-screen dark-room-screen">
+
+        <div class="dark-room-content">
+
+            <div class="press-glow">
+                ✨
+            </div>
+
+            <p class="dark-room-text">
+                It's a little dark in here...
+            </p>
+
+            <button
+                type="button"
+                class="press-button"
+                id="lights-button">
+                Press me
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SCREEN 3 — BIRTHDAY ROOM
+         ========================================= -->
+
+    <section
+        id="screen-birthday-room"
+        class="birthday-screen birthday-room">
+
+        <!-- Room background -->
+        <div class="room-background">
+
+            <!-- Decorative lights -->
+            <div class="room-lights">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+
+            <!-- Floating decorations -->
+            <div class="birthday-decorations">
+
+                <span class="balloon balloon-1">🎈</span>
+                <span class="balloon balloon-2">🎈</span>
+                <span class="balloon balloon-3">🎈</span>
+
+                <span class="sparkle sparkle-1">✦</span>
+                <span class="sparkle sparkle-2">✧</span>
+                <span class="sparkle sparkle-3">✦</span>
+                <span class="sparkle sparkle-4">✧</span>
+
+            </div>
+
+
+            <!-- Birthday banner -->
+            <div class="birthday-banner">
+
+                <span class="banner-decoration">
+                    ✿
+                </span>
+
+                <div class="banner-text">
+                    <p>HAPPY BIRTHDAY</p>
+                    <h1 id="birthday-name-banner">
+                        Your Name
+                    </h1>
+                </div>
+
+                <span class="banner-decoration">
+                    ✿
+                </span>
+
+            </div>
+
+
+            <!-- Cute animals -->
+            <div class="birthday-animals">
+
+                <div class="animal animal-1">
+                    <span class="animal-body">🐰</span>
+                </div>
+
+                <div class="animal animal-2">
+                    <span class="animal-body">🐻</span>
+                </div>
+
+                <div class="animal animal-3">
+                    <span class="animal-body">🐱</span>
+                </div>
+
+                <div class="animal animal-4">
+                    <span class="animal-body">🐶</span>
+                </div>
+
+            </div>
+
+
+            <!-- Birthday table -->
+            <div class="birthday-table">
+
+                <div class="table-top"></div>
+
+                <div class="table-cloth"></div>
+
+                <!-- Cake -->
+                <div class="birthday-cake">
+
+                    <div
+                        id="cake-candles"
+                        class="cake-candles">
+                        <!-- JavaScript creates candles -->
+                    </div>
+
+                    <div class="cake-top">
+                        <div class="cake-decoration">
+                            ✿
+                        </div>
+                    </div>
+
+                    <div class="cake-middle"></div>
+
+                    <div class="cake-bottom"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Cake interaction -->
+        <div
+            id="cake-interaction"
+            class="cake-interaction">
+
+            <p class="cake-message">
+                Make a wish...
+            </p>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="blow-candles-button">
+                💨 Blow out the candles
+            </button>
+
+        </div>
+
+
+        <!-- Continue after candles -->
+        <div
+            id="after-cake"
+            class="after-cake hidden">
+
+            <p>
+                Wish made? ✨
+            </p>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="to-flower-shop">
+                There's one more surprise →
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SCREEN 4 — FLOWER SHOP
+         ========================================= -->
+
+    <section
+        id="screen-flower-shop"
+        class="birthday-screen flower-shop-screen">
+
+        <div class="flower-shop-header">
+
+            <div class="shop-logo">
+                <span>✿</span>
+
+                <div>
+                    <h1>Bloom & Co.</h1>
+                    <p>A bouquet made by you</p>
+                </div>
+            </div>
+
+            <div class="shop-basket">
+                <span>💐</span>
+                <span id="basket-count">0</span>
+            </div>
+
+        </div>
+
+
+        <!-- Flower shop progress -->
+        <div class="shop-progress">
+
+            <div class="shop-progress-text">
+
+                <span id="shop-step-label">
+                    Choose your flowers
+                </span>
+
+                <span id="shop-step-number">
+                    1 / 5
+                </span>
+
+            </div>
+
+            <div class="shop-progress-track">
+
+                <div
+                    id="shop-progress-bar">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FLOWER SHOP STEP 1
+             ===================================== -->
+
+        <div
+            id="shop-step-1"
+            class="shop-step active">
+
+            <p class="eyebrow">
+                Step 1 · Your flowers
+            </p>
+
+            <h2>
+                Let's make you a bouquet.
+            </h2>
+
+            <p class="slide-description">
+                Choose the first flower you'd love to see in it.
+            </p>
+
+            <div
+                id="flower-grid-1"
+                class="flower-grid">
+                <!-- JavaScript creates flower choices -->
+            </div>
+
+            <div class="selection-panel">
+
+                <p class="selection-label">
+                    Your flower
+                </p>
+
+                <div id="selected-flower-1">
+                    Nothing chosen yet
+                </div>
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        id="quantity-minus"
+                        aria-label="Decrease quantity">
+                        −
+                    </button>
+
+                    <span id="flower-quantity">
+                        1
+                    </span>
+
+                    <button
+                        type="button"
+                        id="quantity-plus"
+                        aria-label="Increase quantity">
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="add-first-flower"
+                disabled>
+                Add to my bouquet →
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             FLOWER SHOP STEP 2
+             ===================================== -->
+
+        <div
+            id="shop-step-2"
+            class="shop-step">
+
+            <p class="eyebrow">
+                Step 2 · A little more
+            </p>
+
+            <h2>
+                One flower is lovely.
+                <br>
+                Maybe you'd like another.
+            </h2>
+
+            <p class="slide-description">
+                Add another flower or keep it simple.
+            </p>
+
+            <div
+                id="flower-grid-2"
+                class="flower-grid">
+                <!-- JavaScript creates flower choices -->
+            </div>
+
+            <div class="selection-panel">
+
+                <p class="selection-label">
+                    Adding
+                </p>
+
+                <div id="selected-flower-2">
+                    Nothing chosen yet
+                </div>
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        id="quantity-minus-2"
+                        aria-label="Decrease quantity">
+                        −
+                    </button>
+
+                    <span id="flower-quantity-2">
+                        1
+                    </span>
+
+                    <button
+                        type="button"
+                        id="quantity-plus-2"
+                        aria-label="Increase quantity">
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="two-buttons">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="skip-second-flower">
+                    Keep it simple
+                </button>
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="add-second-flower"
+                    disabled>
+                    Add flower →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FLOWER SHOP STEP 3
+             ===================================== -->
+
+        <div
+            id="shop-step-3"
+            class="shop-step">
+
+            <p class="eyebrow">
+                Step 3 · A little green
+            </p>
+
+            <h2>
+                Give your flowers
+                some company.
+            </h2>
+
+            <p class="slide-description">
+                Choose some greenery for your bouquet.
+            </p>
+
+            <div
+                id="greenery-grid"
+                class="greenery-grid">
+                <!-- JavaScript creates greenery -->
+            </div>
+
+            <div class="selection-panel">
+
+                <p class="selection-label">
+                    Greenery
+                </p>
+
+                <div id="selected-greenery">
+                    None yet
+                </div>
+
+                <div class="quantity-control">
+
+                    <button
+                        type="button"
+                        id="greenery-minus"
+                        aria-label="Decrease greenery">
+                        −
+                    </button>
+
+                    <span id="greenery-quantity">
+                        1
+                    </span>
+
+                    <button
+                        type="button"
+                        id="greenery-plus"
+                        aria-label="Increase greenery">
+                        +
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div class="two-buttons">
+
+                <button
+                    type="button"
+                    class="secondary-button"
+                    id="skip-greenery">
+                    No greenery
+                </button>
+
+                <button
+                    type="button"
+                    class="primary-button"
+                    id="add-greenery"
+                    disabled>
+                    Add greenery →
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             FLOWER SHOP STEP 4
+             ===================================== -->
+
+        <div
+            id="shop-step-4"
+            class="shop-step">
+
+            <p class="eyebrow">
+                Step 4 · The finishing touch
+            </p>
+
+            <h2>
+                Pick your ribbon.
+            </h2>
+
+            <p class="slide-description">
+                How should your bouquet be tied?
+            </p>
+
+            <div
+                id="ribbon-grid"
+                class="ribbon-grid">
+                <!-- JavaScript creates ribbons -->
+            </div>
+
+            <div class="ribbon-preview">
+
+                <span id="ribbon-preview-icon">
+                    🎀
+                </span>
+
+                <span id="ribbon-preview-name">
+                    Choose your ribbon
+                </span>
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="add-ribbon"
+                disabled>
+                Tie it up →
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             FLOWER SHOP STEP 5
+             ===================================== -->
+
+        <div
+            id="shop-step-5"
+            class="shop-step">
+
+            <p class="eyebrow">
+                Step 5 · Wrap it beautifully
+            </p>
+
+            <h2>
+                Choose the wrapping.
+            </h2>
+
+            <p class="slide-description">
+                Pick the paper that feels like you.
+            </p>
+
+            <div
+                id="wrapping-grid"
+                class="wrapping-grid">
+                <!-- JavaScript creates wrapping -->
+            </div>
+
+            <div
+                id="wrapping-preview"
+                class="wrapping-preview">
+
+                <div class="preview-bouquet">
+                    💐
+                </div>
+
+                <p id="wrapping-preview-name">
+                    Choose your wrapping
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="add-wrapping"
+                disabled>
+                Wrap my bouquet →
+            </button>
+
+        </div>
+
+
+        <!-- =====================================
+             BOUQUET REVEAL
+             ===================================== -->
+
+        <div
+            id="bouquet-reveal"
+            class="bouquet-reveal hidden">
+
+            <p class="eyebrow">
+                Made by you
+            </p>
+
+            <h2>
+                Your birthday bouquet.
+            </h2>
+
+            <div
+                id="bouquet-visual"
+                class="bouquet-visual">
+                <!-- JavaScript builds bouquet -->
+            </div>
+
+            <div
+                id="bouquet-details"
+                class="bouquet-details">
+                <!-- JavaScript lists selections -->
+            </div>
+
+            <button
+                type="button"
+                class="primary-button"
+                id="open-letter">
+                There's something for you ♡
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================
+         SCREEN 5 — FINAL LETTER
+         ========================================= -->
+
+    <section
+        id="screen-letter"
+        class="birthday-screen letter-screen">
+
+        <div class="letter-container">
+
+            <div class="letter-decoration">
+                ✿
+            </div>
+
+            <p class="eyebrow">
+                One last thing...
+            </p>
+
+            <h1>
+                For <span id="letter-name">
+                    you
+                </span> ♡
+            </h1>
+
+            <div class="letter-card">
+
+                <p class="letter-greeting">
+                    Happy Birthday,
+                    <span id="letter-name-inside">
+                        you
+                    </span>.
+                </p>
+
+                <div class="letter-body">
+
+                    <p>
+                        Another year of your life has begun,
+                        and I hope this one brings you more
+                        beautiful moments than you expect.
+                    </p>
+
+                    <p>
+                        I hope you keep finding little reasons
+                        to smile, people who make you feel loved,
+                        and moments that make you glad you were here.
+                    </p>
+
+                    <p>
+                        And whenever life gets a little heavy,
+                        I hope you remember that you deserve
+                        softness too.
+                    </p>
+
+                    <p>
+                        This little bouquet may be virtual,
+                        but the wish behind it is real.
+                    </p>
+
+                </div>
+
+                <p class="letter-signature">
+                    With a little love,<br>
+                    ♡
+                </p>
+
+            </div>
+
+
+            <!-- Final bouquet miniature -->
+            <div
+                id="final-bouquet-mini"
+                class="final-bouquet-mini">
+                <!-- JavaScript copies/builds final bouquet -->
+            </div>
+
+
+            <p class="final-message">
+                Made especially for
+                <span id="final-name">
+                    you
+                </span>.
+                🌷
+            </p>
+
+            <button
+                type="button"
+                class="secondary-button"
+                id="restart-birthday">
+                Start the surprise again
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
